@@ -11,26 +11,34 @@ import TypographyCustom from "@components/Typography";
 import { LockOutlinedIconCustom } from "@icons/LockOutlinedIcon/styles";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { httpInstance } from "../../api";
 
 interface IPayloadLogin {
-  username: string | null;
-  password: string | null;
+  username?: string;
+  password?: string;
 }
 
 const validationSchema = yup.object({
   username: yup.string().required("Username is required"),
-  password: yup.string().min(8, "Password should be of minimum 8 characters length").required("Password is required"),
+  password: yup.string().min(6, "Password should be of minimum 6 characters length").required("Password is required"),
 });
 
 function SignIn(): JSX.Element {
   const formik = useFormik({
     initialValues: {
-      username: null,
-      password: null,
+      username: "",
+      password: "",
     } as IPayloadLogin,
     validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
+    onSubmit: ({ username, password }) => {
+      httpInstance
+        .post("auth/login", { username, password })
+        .then((result: Record<string, any>) => {
+          alert(JSON.stringify({ ...result.data }));
+        })
+        .catch((err) => {
+          alert(JSON.stringify(err));
+        });
     },
   });
 
