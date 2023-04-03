@@ -20,9 +20,8 @@
       "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
       "@icons/*": ["icons/*"],
-      "@interfaces/*": ["interfaces/*"],
       "@pages/*": ["pages/*"],
-      "@saga/*": ["saga/*"],
+      "@store/*": ["store/*"],
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"]
     }

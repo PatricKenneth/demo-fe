@@ -27,6 +27,7 @@ function getAlias(): AliasOptions {
     { find: "@assets", replacement: getPath("assets") },
     { find: "@components", replacement: getPath("components") },
     { find: "@icons", replacement: getPath("icons") },
+    { find: "@store", replacement: getPath("store") },
     { find: "@pages", replacement: getPath("pages") },
     { find: "@styles", replacement: getPath("styles") },
     { find: "@utils", replacement: getPath("utils") },

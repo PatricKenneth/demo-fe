@@ -11,7 +11,12 @@ import TypographyCustom from "@components/Typography";
 import { LockOutlinedIconCustom } from "@icons/LockOutlinedIcon/styles";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { httpInstance } from "../../api";
+import { useDispatch, useSelector } from "react-redux";
+import { IAuthState } from "@store/auth/interfaces";
+import { useEffect } from "react";
+import { useDoSignInMutation } from "@store/auth/services";
+import { loginFailed, loginSuccess } from "@store/auth/reducer";
+import { useNavigate } from "react-router-dom";
 
 interface IPayloadLogin {
   username?: string;
@@ -24,22 +29,34 @@ const validationSchema = yup.object({
 });
 
 function SignIn(): JSX.Element {
+  const authState: IAuthState = useSelector((state: Record<string, IAuthState>) => state.authReducer);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [doSignInMutation, { isLoading, isError, isSuccess, error, data }] = useDoSignInMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(loginSuccess({ user: data }));
+    }
+    if (isError) {
+      const { data, originalStatus } = error as { data: string; originalStatus: number };
+      dispatch(loginFailed({ error: data, errorCode: originalStatus }));
+    }
+  }, [isError, isSuccess]);
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      navigate("/");
+    }
+  }, [authState]);
+
   const formik = useFormik({
     initialValues: {
       username: "",
       password: "",
     } as IPayloadLogin,
     validationSchema,
-    onSubmit: ({ username, password }) => {
-      httpInstance
-        .post("auth/login", { username, password })
-        .then((result: Record<string, any>) => {
-          alert(JSON.stringify({ ...result.data }));
-        })
-        .catch((err) => {
-          alert(JSON.stringify(err));
-        });
-    },
+    onSubmit: ({ username, password }) => doSignInMutation({ username, password }),
   });
 
   return (
@@ -78,7 +95,8 @@ function SignIn(): JSX.Element {
               helperText={formik.touched.password && formik.errors.password}
             />
             <CheckboxCustom value="remember" color="primary" label="Remember me" />
-            <ButtonCustom type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            {isError && <TypographyCustom>{authState.error}</TypographyCustom>}
+            <ButtonCustom type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} loading={isLoading}>
               Sign In
             </ButtonCustom>
             <GridCustom container>
