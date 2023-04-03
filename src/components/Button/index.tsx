@@ -1,7 +1,7 @@
-import { ButtonProps } from "@mui/material";
 import { ButtonStyle } from "./styles";
+import { LoadingButtonProps } from "@mui/lab";
 
-function ButtonCustom({ children, ...props }: ButtonProps): JSX.Element {
+function ButtonCustom({ children, ...props }: LoadingButtonProps): JSX.Element {
   return <ButtonStyle {...props}>{children}</ButtonStyle>;
 }
 

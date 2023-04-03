@@ -1,3 +1,4 @@
-import { Button, styled as MUIStyled } from "@mui/material";
+import { styled as MUIStyled } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
-export const ButtonStyle = MUIStyled(Button)(() => ({}));
+export const ButtonStyle = MUIStyled(LoadingButton)(() => ({}));
