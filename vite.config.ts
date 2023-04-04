@@ -16,6 +16,9 @@ export default defineConfig({
   resolve: {
     alias: getAlias(),
   },
+  build: {
+    chunkSizeWarningLimit: 700,
+  },
 });
 
 function getPath(path: string): string {
